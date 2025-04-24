@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import { setupDatabase } from "./db/connectDB.js";
 
 dotenv.config(); // Load environment variables from .env file
 
@@ -14,6 +15,25 @@ app.get("/", (req, res) => {
     res.send("Welcome to the Express server!");
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+const startServer = async () => {
+    try {
+        // Create database and tables
+        // This will create the database and tables if they don't exist
+        // and will throw an error if there's an issue
+        // with the database connection or creation.
+        // This is a good place to put the database setup code
+        // because it ensures that the database is ready before the server starts.
+        await setupDatabase(); // Call the function to create the database
+
+        // Start the server
+        app.listen(PORT, () => {
+            console.log(`✅ Server is running on http://localhost:${PORT}`);
+        });
+    } catch (error) {
+        console.error("❌ Error starting the server:", error);
+        process.exit(1); // Exit the process with a failure code
+    }
+};
+
+// Start the server
+startServer(); // Call the function to start the server
