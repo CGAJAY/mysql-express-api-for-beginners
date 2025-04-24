@@ -1,6 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
-import { setupDatabase } from "./db/connectDB.js";
+import { setupDatabase } from "./script/setupDB.js";
+import router from "./routes/user.js";
+import errorHandler from "./middlewares/errorHandler.js";
 
 dotenv.config(); // Load environment variables from .env file
 
@@ -15,6 +17,20 @@ app.get("/", (req, res) => {
     res.send("Welcome to the Express server!");
 });
 
+// Apply centralized error handling middleware
+app.use(errorHandler);
+
+// User routes
+app.use("/api/users", router); // Use the user routes defined in the router
+
+// 404 error handling for undefined routes
+app.use((req, res) => {
+    res.status(404).json({
+        success: false,
+        message: "Route not found",
+    });
+});
+
 const startServer = async () => {
     try {
         // Create database and tables
@@ -24,6 +40,7 @@ const startServer = async () => {
         // This is a good place to put the database setup code
         // because it ensures that the database is ready before the server starts.
         await setupDatabase(); // Call the function to create the database
+        console.log("✅ Database setup completed.");
 
         // Start the server
         app.listen(PORT, () => {
