@@ -5,6 +5,16 @@ class User {
     // Method to create a new user
     static async create({ name, email }) {
         try {
+            // Check if the user already exists
+            const [existingUser] = await pool.query(
+                "SELECT * FROM users WHERE email = ?",
+                [email]
+            );
+
+            if (existingUser.length > 0) {
+                throw new Error("Email already in use");
+            }
+
             // Insert a new user into the users table
             const [result] = await pool.query(
                 "INSERT INTO users (name, email) VALUES (?, ?)",
@@ -17,7 +27,15 @@ class User {
             };
         } catch (error) {
             console.error("❌ Error creating user:", error);
-            throw new Error(`Failed to create user: ${error.message}`);
+            // Handle MySQL duplicate entry error (in case the SELECT check is bypassed)
+            if (
+                error.code === "ER_DUP_ENTRY" ||
+                error.message === "Email already in use"
+            ) {
+                throw new Error("Email already in use");
+            }
+            // Rethrow other errors with their original message
+            throw new Error(error.message || "Failed to create user");
         }
     }
 
