@@ -1,16 +1,18 @@
-// Import mysql2 with promise support
 import mysql from "mysql2/promise";
+import type { Connection } from "mysql2/promise";
 import dotenv from "dotenv";
 
-// Load environment variables
+// Load environment variables from .env file
 dotenv.config();
 
-// Function to set up the database and tables
-export const setupDatabase = async () => {
-    let connectDB;
+const { createConnection } = mysql;
+
+// Function to set up the database and create tables
+const setupDatabase = async (): Promise<void> => {
+    let connectDB: Connection | null = null; // Initialize connection variable
     try {
-        // Create a connection to the MySQL server (without specifying a database)
-        connectDB = await mysql.createConnection({
+        // Create a connection to the MySQL server
+        connectDB = await createConnection({
             host: process.env.DB_HOST,
             user: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
@@ -24,8 +26,9 @@ export const setupDatabase = async () => {
             `✅ Database ${process.env.DB_NAME} created or already exists.`
         );
 
-        // Switch to the created database
+        // Use the created database
         await connectDB.query(`USE ${process.env.DB_NAME}`);
+        console.log(`✅ Using database ${process.env.DB_NAME}.`);
 
         // Create the users table if it doesn't exist
         await connectDB.query(`
@@ -39,11 +42,12 @@ export const setupDatabase = async () => {
         console.log("✅ Users table created or already exists.");
     } catch (error) {
         console.error("❌ Error setting up the database:", error);
-        throw error; // Rethrow to be handled by the caller
+        throw error; // Rethrow the error to be handled by the caller
     } finally {
-        // Close the connection if it was created
         if (connectDB) {
             await connectDB.end();
         }
     }
 };
+
+export default setupDatabase;

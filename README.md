@@ -1,48 +1,71 @@
-# MySQL + Express.js Beginner API
+# User Management API (TypeScript)
 
-This is a beginner-friendly Express.js API using MySQL as the database. It is structured with folders for controllers, routes, models, and middleware, and uses ES6 syntax. The project demonstrates how to build a simple CRUD API to manage users.
+A RESTful API built with Express.js, MySQL, and TypeScript for managing users.
 
-## 📁 Folder Structure
+## Prerequisites
+- Node.js (v16 or higher)
+- MySQL (v8 or higher)
+- npm
 
-```
-project-root/
-├── controllers/
-├── models/
-├── routes/
-├── middlewares/
-├── db/
-├── .env
-├── server.js
-├── package.json
-└── README.md
-```
+## Setup Instructions
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd user-management-api
+   ```
 
-## 📦 Installation
+2. Checkout the TypeScript branch:
+   ```bash
+   git checkout feature/typescript-version
+   ```
 
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+4. Create a `.env` file in the root directory and add the following:
+   ```plaintext
+   DB_HOST=localhost
+   DB_USER=root
+   DB_PASSWORD=your_password
+   DB_NAME=user_management
+   PORT=3000
+   ```
+
+5. Start the MySQL server and ensure it's running.
+
+6. Run the application in development mode:
+   ```bash
+   npm run dev
+   ```
+   Or, build and run for production:
+   ```bash
+   npm run build
+   npm start
+   ```
+
+## API Endpoints
+- `GET /api/users` - Get all users
+- `POST /api/users` - Create a new user
+- `GET /api/users/:id` - Get a user by ID
+- `PUT /api/users/:id` - Update a user
+- `DELETE /api/users/:id` - Delete a user
+
+## Example Request
+Create a user:
 ```bash
-npm init -y
-npm install express mysql2 dotenv
-npm install --save-dev nodemon
+curl -X POST http://localhost:3000/api/users \
+-H "Content-Type: application/json" \
+-d '{"name":"John Doe","email":"john@example.com"}'
 ```
 
-## 🚀 Getting Started
-
-1. Create a `.env` file:
-
-```
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=your_password
-DB_NAME=myapp_db
-PORT=5000
-```
-
-2. Start MySQL server and create database `myapp_db`
-
-3. Run the app:
-
-```bash
-npx nodemon server.js
-```
-
----
+## Project Structure
+- `src/config/` - Database connection configuration
+- `src/controllers/` - Business logic for handling requests
+- `src/middlewares/` - Reusable middleware functions
+- `src/models/` - Database schemas and operations
+- `src/routes/` - API endpoint definitions
+- `src/scripts/` - Database setup scripts
+- `src/app.ts` - Main application entry point
+- `tsconfig.json` - TypeScript compiler configuration

@@ -1,16 +1,32 @@
 {
     "name": "mysql-express-api-for-beginners",
     "version": "1.0.0",
-    "description": "",
-    "main": "server.js",
+    "description": "A RESTful API built with Express.js, MySQL, and TypeScript for managing users.",
+    "main": "app.js",
     "scripts": {
-        "start": "node src/server.js",
-        "dev": "nodemon src/server.js"
+        "start": "tsc && node dist/app.js",
+        "dev": "nodemon --watch src --ext ts --exec ts-node src/app.ts",
+        "build": "tsc"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/CGAJAY/mysql-express-api-for-beginners.git"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "type": "module",
+    "bugs": {
+        "url": "https://github.com/CGAJAY/mysql-express-api-for-beginners/issues"
+    },
+    "homepage": "https://github.com/CGAJAY/mysql-express-api-for-beginners#readme",
+    "devDependencies": {
+        "@types/express": "^5.0.1",
+        "@types/node": "^22.15.2",
+        "nodemon": "^3.1.10",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.8.3"
+    },
     "dependencies": {
         "dotenv": "^16.5.0",
         "express": "^5.1.0",
