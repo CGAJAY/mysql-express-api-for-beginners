@@ -12,13 +12,14 @@ const PORT = process.env.PORT || 3000; // Set the port to listen on
 // Middleware to parse JSON request bodies
 app.use(express.json());
 
-// Home route
+// Root route
 app.get("/", (req, res) => {
-    res.send("Welcome to the Express server!");
+    console.log("Received a request on the root route");
+    res.status(200).json({
+        success: true,
+        message: "Silence is golden",
+    });
 });
-
-// Apply centralized error handling middleware
-app.use(errorHandler);
 
 // User routes
 app.use("/api/users", router); // Use the user routes defined in the router
@@ -30,6 +31,9 @@ app.use((req, res) => {
         message: "Route not found",
     });
 });
+
+// Apply centralized error handling middleware
+app.use(errorHandler);
 
 const startServer = async () => {
     try {

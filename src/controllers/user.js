@@ -2,6 +2,8 @@ import User from "../models/user.js";
 
 // Create a new user
 export const createUser = async (req, res, next) => {
+    console.log("Creating user...");
+
     const { name, email } = req.body;
     try {
         const newUser = await User.create({ name, email }); // Create a new user
