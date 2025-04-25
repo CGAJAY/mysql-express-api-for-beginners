@@ -19,15 +19,32 @@ class UserModel {
         email: string;
     }): Promise<User> {
         try {
+            // Check if a user with the email already exists
+            const [existingUsers] = await pool.query(
+                "SELECT email FROM users WHERE email = ?",
+                [email]
+            );
+            if ((existingUsers as any[]).length > 0) {
+                throw new Error("Email already in use");
+            }
+
+            // Insert a new user into the users table
             const [result]: any = await pool.query(
                 "INSERT INTO users (name, email) VALUES (?, ?)",
                 [name, email]
             );
             return { id: result.insertId, name, email };
-        } catch (error: unknown) {
-            throw new Error(
-                `Failed to create user: ${(error as Error).message}`
-            );
+        } catch (error: any) {
+            console.error("❌ Error creating user:", error);
+            // Handle MySQL duplicate entry error (in case the SELECT check is bypassed)
+            if (
+                error.code === "ER_DUP_ENTRY" ||
+                error.message === "Email already in use"
+            ) {
+                throw new Error("Email already in use");
+            }
+            // Rethrow other errors with their original message
+            throw new Error(error.message || "Failed to create user");
         }
     }
 
